@@ -1,0 +1,6 @@
+{
+  "name": "Ram Mohan & Vaibhavi Wedding Invitation",
+  "description": "Bilingual (English & Telugu) animated Indian wedding invitation website with ceremonial door entrance, interactive event reveals, flip countdown, and RSVP.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

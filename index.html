@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ram Mohan &amp; Vaibhavi Wedding Invitation</title>
+  <meta name="description" content="Bilingual (English &amp; Telugu) animated Indian wedding invitation website with ceremonial door entrance, interactive event reveals, flip countdown, and RSVP." />
+  <meta property="og:title" content="Ram Mohan &amp; Vaibhavi Wedding Invitation" />
+  <meta property="og:description" content="Bilingual (English &amp; Telugu) animated Indian wedding invitation website with ceremonial door entrance, interactive event reveals, flip countdown, and RSVP." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Preload door images to prevent solid-color flash -->
+  <link rel="preload" as="image" href="assets/images/shared/decorative/door-left-english.jpg" />
+  <link rel="preload" as="image" href="assets/images/shared/decorative/door-right-telugu.jpg" />
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- Low-opacity Background Watermark Motif -->
+  <div id="bgWatermark" class="bg-watermark" aria-hidden="true"></div>
+
+  <!-- Falling Flower Petals Container -->
+  <div id="petalsContainer" class="petals-container" aria-hidden="true"></div>
+
+  <!-- 1. DOOR INTRO SCREEN -->
+  <section id="doorsWrap" class="doors-wrap" aria-label="Ceremonial Entrance Doors">
+    <!-- Left Door Panel (English / Mandala) -->
+    <div class="door-panel door-left" id="doorPanelLeft">
+      <span id="doorLabelLeft" class="door-label door-label-en"></span>
+    </div>
+    <!-- Right Door Panel (Telugu / Kolam) -->
+    <div class="door-panel door-right" id="doorPanelRight">
+      <span id="doorLabelRight" class="door-label door-label-te"></span>
+    </div>
+    <!-- Centered Wax Seal Monogram Button -->
+    <button type="button" id="doorSealBtn" class="door-seal-btn" aria-label="Tap to open wedding invitation">
+      <span id="sealMonogram" class="seal-monogram">R &amp; V</span>
+      <span id="sealTagline" class="seal-tagline"></span>
+      <span id="sealSubHint" class="seal-sub-hint"></span>
+    </button>
+  </section>
+
+  <!-- MAIN SCROLLABLE INVITATION CONTENT -->
+  <main class="main-content">
+    
+    <!-- Traditional Kolam Threshold Border (Telugu mode only) -->
+    <div class="kolam-threshold-strip" aria-hidden="true">
+      <svg viewBox="0 0 600 24" fill="none" stroke="#C27803" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;">
+        <path d="M0 12 Q15 4 30 12 T60 12 T90 12 T120 12 T150 12 T180 12 T210 12 T240 12 T270 12 T300 12 T330 12 T360 12 T390 12 T420 12 T450 12 T480 12 T510 12 T540 12 T570 12 T600 12" />
+        <path d="M0 12 Q15 20 30 12 T60 12 T90 12 T120 12 T150 12 T180 12 T210 12 T240 12 T270 12 T300 12 T330 12 T360 12 T390 12 T420 12 T450 12 T480 12 T510 12 T540 12 T570 12 T600 12" />
+        <circle cx="30" cy="12" r="1.5" fill="#C27803"/>
+        <circle cx="90" cy="12" r="1.5" fill="#C27803"/>
+        <circle cx="150" cy="12" r="1.5" fill="#C27803"/>
+        <circle cx="210" cy="12" r="1.5" fill="#C27803"/>
+        <circle cx="270" cy="12" r="1.5" fill="#C27803"/>
+        <circle cx="330" cy="12" r="1.5" fill="#C27803"/>
+        <circle cx="390" cy="12" r="1.5" fill="#C27803"/>
+        <circle cx="450" cy="12" r="1.5" fill="#C27803"/>
+        <circle cx="510" cy="12" r="1.5" fill="#C27803"/>
+        <circle cx="570" cy="12" r="1.5" fill="#C27803"/>
+      </svg>
+    </div>
+
+    <!-- 2. HERO SECTION (full-bleed poster: natural-ratio art + frosted-glass
+         overlay holding the couple names, matching the ceremony cards) -->
+    <article id="heroSection" class="card-section hero-card poster-hero">
+      <div class="event-poster hero-poster">
+        <img id="heroPortraitImg" class="event-poster-img" src="assets/images/english/hero.jpg" alt="" width="768" height="1376" fetchpriority="high" />
+        <div class="event-overlay hero-overlay">
+          <p id="heroOpeningLine" class="hero-opening-line"></p>
+          <div class="hero-couple-names">
+            <h1 class="couple-display-name">
+              <span id="coupleNameGroom"></span>
+              <span class="couple-ampersand">&amp;</span>
+              <span id="coupleNameBride"></span>
+            </h1>
+          </div>
+          <p id="heroSubtitle" class="hero-subtitle"></p>
+        </div>
+      </div>
+    </article>
+
+    <!-- SECTION DIVIDER -->
+    <div class="section-divider" aria-hidden="true">
+      <div class="divider-line"></div>
+      <div class="divider-icon">
+        <svg class="ornament-mandala" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2 L14 8 L20 6 L16 12 L22 14 L16 16 L20 22 L14 20 L12 26 L10 20 L4 22 L8 16 L2 14 L8 12 L4 6 L10 8 Z" opacity="0.4"/>
+        </svg>
+        <svg class="ornament-kolam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="2" fill="currentColor"/>
+          <circle cx="6" cy="12" r="1.2" fill="currentColor"/>
+          <circle cx="18" cy="12" r="1.2" fill="currentColor"/>
+          <circle cx="12" cy="6" r="1.2" fill="currentColor"/>
+          <circle cx="12" cy="18" r="1.2" fill="currentColor"/>
+          <path d="M6 12 Q12 6 18 12 Q12 18 6 12 Z"/>
+        </svg>
+      </div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- 3. FORMAL INVITE TEXT -->
+    <article id="formalInviteSection" class="card-section formal-invite-card">
+      <span id="formalEyebrow" class="formal-eyebrow"></span>
+
+      <div class="family-tribute-grid">
+        <div class="family-box">
+          <h2 id="groomFullName" class="family-person-name"></h2>
+          <p id="groomParentsText" class="family-parents"></p>
+        </div>
+        <div class="family-box">
+          <h2 id="brideFullName" class="family-person-name"></h2>
+          <p id="brideParentsText" class="family-parents"></p>
+        </div>
+      </div>
+
+      <!-- Two-Column Date & Venue Layout -->
+      <div class="date-venue-grid">
+        <div class="info-tile">
+          <div id="dateTileLabel" class="info-tile-label"></div>
+          <div id="dateTileVal" class="info-tile-value"></div>
+        </div>
+        <div class="info-tile">
+          <div id="venueTileLabel" class="info-tile-label"></div>
+          <div id="venueTileVal" class="info-tile-value"></div>
+        </div>
+      </div>
+
+      <!-- Wedding Hashtag Pill -->
+      <div class="hashtag-pill-container">
+        <div class="hashtag-pill" title="Click to copy hashtag">
+          <span id="weddingHashtag">#RamMohanWedsVaibhavi</span>
+          <span>📋</span>
+          <span id="copyToast" class="copy-toast" style="display:none;"></span>
+        </div>
+      </div>
+    </article>
+
+    <!-- SECTION DIVIDER -->
+    <div class="section-divider" aria-hidden="true">
+      <div class="divider-line"></div>
+      <div class="divider-icon">✧</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- 4. FESTIVITIES TIMELINE -->
+    <article id="timelineSection" class="card-section">
+      <header class="section-heading-wrap">
+        <h2 id="timelineTitle" class="section-title"></h2>
+        <p id="timelineSubtitle" class="section-subtitle"></p>
+      </header>
+      <div class="timeline-container">
+        <div class="timeline-line"></div>
+        <div id="timelineEntries"></div>
+      </div>
+    </article>
+
+    <!-- SECTION DIVIDER -->
+    <div class="section-divider" aria-hidden="true">
+      <div class="divider-line"></div>
+      <div class="divider-icon">✧</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- 6. PICK YOUR SIDE -->
+    <article id="sidePickerSection" class="card-section">
+      <header class="section-heading-wrap">
+        <h2 id="sidePickerTitle" class="section-title"></h2>
+        <p id="sidePickerSubtitle" class="section-subtitle"></p>
+      </header>
+      <div class="side-picker-grid">
+        <!-- Team Bride -->
+        <div id="cardTeamBride" class="side-card selected" role="button" tabindex="0" aria-pressed="true">
+          <div class="side-check-indicator">✓</div>
+          <div class="side-badge">👰✨</div>
+          <h3 id="teamBrideTitle" class="side-title"></h3>
+          <p id="teamBrideTagline" class="side-tagline"></p>
+        </div>
+        <!-- Team Groom -->
+        <div id="cardTeamGroom" class="side-card" role="button" tabindex="0" aria-pressed="false">
+          <div class="side-check-indicator">✓</div>
+          <div class="side-badge">🤵🥁</div>
+          <h3 id="teamGroomTitle" class="side-title"></h3>
+          <p id="teamGroomTagline" class="side-tagline"></p>
+        </div>
+      </div>
+    </article>
+
+    <!-- SECTION DIVIDER -->
+    <div class="section-divider" aria-hidden="true">
+      <div class="divider-line"></div>
+      <div class="divider-icon">✧</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- 7. LIVE COUNTDOWN -->
+    <article id="countdownSection" class="card-section countdown-card">
+      <svg class="countdown-corner-glyph countdown-top-left" viewBox="0 0 32 32" fill="none" stroke="currentColor" aria-hidden="true">
+        <path d="M2 30 L2 4 C2 2.9 2.9 2 4 2 L30 2" stroke-width="1.5"/>
+        <circle cx="10" cy="10" r="2" fill="currentColor"/>
+      </svg>
+      <svg class="countdown-corner-glyph countdown-top-right" viewBox="0 0 32 32" fill="none" stroke="currentColor" aria-hidden="true">
+        <path d="M2 30 L2 4 C2 2.9 2.9 2 4 2 L30 2" stroke-width="1.5"/>
+        <circle cx="10" cy="10" r="2" fill="currentColor"/>
+      </svg>
+
+      <header class="countdown-header">
+        <p id="muhurthamExactLabel" class="muhurtham-exact-label"></p>
+        <h2 id="countdownTitle" class="countdown-title"></h2>
+      </header>
+
+      <!-- 3D Flip Tiles Container -->
+      <div class="countdown-tiles-wrap">
+        <!-- Days -->
+        <div id="blockDays" class="countdown-tile-block">
+          <div class="flip-tile">
+            <span id="tileDays" class="tile-digit">00</span>
+          </div>
+          <span id="labelDays" class="tile-label">Days</span>
+        </div>
+        <span class="countdown-separator">✧</span>
+        <!-- Hours -->
+        <div id="blockHours" class="countdown-tile-block">
+          <div class="flip-tile">
+            <span id="tileHours" class="tile-digit">00</span>
+          </div>
+          <span id="labelHours" class="tile-label">Hours</span>
+        </div>
+        <span class="countdown-separator">✧</span>
+        <!-- Mins -->
+        <div id="blockMins" class="countdown-tile-block">
+          <div class="flip-tile">
+            <span id="tileMins" class="tile-digit">00</span>
+          </div>
+          <span id="labelMins" class="tile-label">Mins</span>
+        </div>
+        <span class="countdown-separator">✧</span>
+        <!-- Secs -->
+        <div id="blockSecs" class="countdown-tile-block">
+          <div class="flip-tile">
+            <span id="tileSecs" class="tile-digit">00</span>
+          </div>
+          <span id="labelSecs" class="tile-label">Secs</span>
+        </div>
+      </div>
+
+      <div id="countdownStatusLine" class="countdown-status-line"></div>
+    </article>
+
+    <!-- SECTION DIVIDER -->
+    <div class="section-divider" aria-hidden="true">
+      <div class="divider-line"></div>
+      <div class="divider-icon">✧</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- 8. RSVP ACTIONS (Simplified: 3 Clean Actions) -->
+    <article id="rsvpSection" class="card-section rsvp-card">
+      <header class="section-heading-wrap">
+        <h2 id="rsvpTitle" class="section-title"></h2>
+        <p id="rsvpSubtitle" class="section-subtitle"></p>
+      </header>
+
+      <div class="rsvp-actions-wrap">
+        <!-- 1. WhatsApp RSVP Button -->
+        <button type="button" id="rsvpSubmitBtn" class="btn-rsvp-primary">
+          <span class="btn-rsvp-icon" aria-hidden="true">💬</span>
+          <span id="rsvpSubmitText">Send RSVP via WhatsApp ✦</span>
+        </button>
+
+        <div class="rsvp-secondary-actions">
+          <!-- 2. Add to Calendar -->
+          <a href="#" id="addFullWeddingBtn" class="btn-rsvp-secondary">
+            <span class="btn-rsvp-icon" aria-hidden="true">📅</span>
+            <span id="addFullWeddingText">+ Add to Calendar</span>
+          </a>
+
+          <!-- 3. Get Directions -->
+          <a href="#" id="directionsBtn" class="btn-rsvp-secondary" target="_blank" rel="noopener noreferrer">
+            <span class="btn-rsvp-icon" aria-hidden="true">📍</span>
+            <span id="directionsText">📍 Get Directions</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Call the Family Fallback -->
+      <div class="call-family-fallback">
+        <span id="callFamilyLabel"></span>
+        <a id="familyPhoneLink" href="tel:+919876543210">+91 98765 43210</a>
+      </div>
+    </article>
+
+    <!-- SECTION DIVIDER -->
+    <div class="section-divider" aria-hidden="true">
+      <div class="divider-line"></div>
+      <div class="divider-icon">✧</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- 9. CLOSING SCREEN -->
+    <article id="closingSection" class="card-section closing-card">
+      <div id="closingSymbol" class="closing-om-symbol"></div>
+      <p id="closingBlessing" class="closing-blessing"></p>
+      <h3 id="closingCoupleNames" class="closing-couple-names"></h3>
+      <p id="closingNote" class="closing-note"></p>
+    </article>
+
+  </main>
+
+  <!-- Replay Door Entrance Control (floating, hidden while doors are locked) -->
+  <button type="button" id="replayBtn" class="replay-entrance-btn">
+    <span class="replay-icon" aria-hidden="true">↺</span>
+    <span id="replayLabel" class="replay-label"></span>
+  </button>
+
+  <!-- 5. REVEAL MINI-GAMES MODAL OVERLAY -->
+  <div id="revealModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalEventTitle">
+    <div class="modal-box">
+      <button type="button" id="modalCloseBtn" class="modal-close-btn">✕</button>
+      <h3 id="modalEventTitle" class="modal-event-title"></h3>
+      <p id="modalPromptText" class="modal-prompt-text"></p>
+      <div id="modalContentArea"></div>
+    </div>
+  </div>
+
+  <!-- Runtime Scripts: Single Source of Truth CONFIG then SCRIPT -->
+  <script src="./config.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
