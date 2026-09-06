@@ -180,13 +180,9 @@ window.CONFIG = {
       en: "Join us in each joyful celebration of love, music, and traditions",
       te: "ప్రేమ, సంగీతం మరియు సంప్రదాయాల వేడుకలలో మాతో పాల్గొనండి"
     },
-    addToCalendar: {
+addToCalendar: {
       en: "+ Add to Calendar",
-      te: "+ క్యాలెండర్‌కు చేర్చండి"
-    },
-    revealButton: {
-      en: "Reveal ✦",
-      te: "రహస్యం చూడండి ✦"
+      te: "+ క్యాలెండర్\u200cకు చేర్చండి"
     },
     sidePickerTitle: {
       en: "Whose Side Are You On?",
@@ -256,10 +252,6 @@ window.CONFIG = {
       en: "Close ✕",
       te: "మూసివేయి ✕"
     },
-    replayEntrance: {
-      en: "Replay entrance",
-      te: "తిరిగి ద్వారం చూడండి"
-    },
     minigameHints: {
       scratch: {
         en: "✦ Scratch here ✦",
@@ -309,6 +301,10 @@ window.CONFIG = {
         en: "Scratch with your finger or mouse to unveil the Haldi blessing!",
         te: "పసుపు వేడుక ఆశీర్వాదం చూడటానికి కార్డ్‌ను స్క్రాచ్ చేయండి!"
       },
+      revealLabel: {
+        en: "Rub to Reveal",
+        te: "గీరి చూడండి"
+      },
       revealSecret: {
         en: "✨ Blessings revealed: Golden turmeric glows with health, joy & laughter! ✨",
         te: "✨ పసుపు శోభతో జీవితం నిత్య కల్యాణమై వెలగాలని ఆశీస్సులు! ✨"
@@ -346,6 +342,10 @@ window.CONFIG = {
         en: "Trace along the sacred heart to complete the Mehendi pattern!",
         te: "గోరింటాకు హృదయ ఆకారాన్ని గీసి వేడుకను ఆవిష్కరించండి!"
       },
+      revealLabel: {
+        en: "Trace the Heart",
+        te: "హృదయాన్ని గీయండి"
+      },
       revealSecret: {
         en: "🌿 Beautiful henna etched forever: Two loving hearts united as one! 🌿",
         te: "🌿 అనురాగపు గోరింటాకుతో రెండు మనసులు ఒక్కటయ్యాయి! 🌿"
@@ -382,6 +382,10 @@ window.CONFIG = {
       revealPrompt: {
         en: "Tap the traditional Dhol drum to unlock the festive sangeet rhythm!",
         te: "సంగీత లయను మేల్కొలపడానికి డోలుపై తట్టండి!"
+      },
+      revealLabel: {
+        en: "Tap the Dhol",
+        te: "డోలు తట్టండి"
       },
       revealSecret: {
         en: "🥁 Dhol beats rock the dance floor! Put on your dancing shoes! 🥁",

@@ -7,6 +7,13 @@
 (function () {
   'use strict';
 
+  // Disable the browser's native scroll restoration so a refresh never snaps
+  // back to the visitor's pre-refresh scroll position — every load must start
+  // fresh at the top, behind the closed doors.
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+
   // State
   let currentLang = 'en';
   let selectedTeam = 'bride'; // 'bride' | 'groom'
@@ -14,8 +21,8 @@
   let prevCountdownValues = { days: -1, hours: -1, mins: -1, secs: -1 };
   let activeAudioCtx = null;
   let cardRevealObserver = null; // scroll-reveal for ceremony poster cards
+  let sectionRevealObserver = null; // scroll-reveal for major card sections
   let lastFocusedElement = null; // trigger element, restored when the modal closes
-  let replayingDoors = false;    // guards the door ceremony during a replay
 
   // Cache DOM elements
   const el = {
@@ -101,10 +108,6 @@
 
     // Main scrollable content (background page behind the reveal modal)
     mainContent: document.querySelector('.main-content'),
-
-    // Replay door entrance control
-    replayBtn: document.getElementById('replayBtn'),
-    replayLabel: document.getElementById('replayLabel'),
 
     // Reveal Modal
     revealModal: document.getElementById('revealModal'),
@@ -291,10 +294,6 @@
     el.closingNote.textContent = cfg.ui.closingNote[currentLang];
     el.modalCloseBtn.textContent = cfg.ui.modalCloseBtn[currentLang];
 
-    // Replay entrance control
-    el.replayLabel.textContent = cfg.ui.replayEntrance[currentLang];
-    el.replayBtn.setAttribute('aria-label', cfg.ui.replayEntrance[currentLang]);
-
     // Watermark update + warm the active language's artwork in the background
     updateWatermark();
     preloadLanguageImages();
@@ -303,10 +302,22 @@
   // --------------------------------------------------------------------------
   // FESTIVITIES TIMELINE CARDS BUILDER
   // --------------------------------------------------------------------------
+
+  // Single source for an event's current-language artwork path (used by the
+  // timeline thumbnails and by the Reveal modal's hidden illustration layer).
+  function getEventImgSrc(ev) {
+    const imgKey = ev.imageKey || ev.id;
+    return (window.CONFIG.images[imgKey] && window.CONFIG.images[imgKey][currentLang]) ||
+      `assets/images/${currentLang === 'te' ? 'telugu' : 'english'}/${imgKey}.jpg`;
+  }
+
   function renderTimelineCards() {
     const cfg = window.CONFIG;
     const isTe = currentLang === 'te';
     el.timelineEntries.innerHTML = '';
+
+    // Rotations for the photo thumbnails, cycled per card that shows one.
+    let thumbIdx = 0;
 
     cfg.events.forEach((ev) => {
       const entryDiv = document.createElement('div');
@@ -322,8 +333,7 @@
       const eventTagline = ev.tagline ? ev.tagline[currentLang] : '';
 
       // Image path
-      const imgKey = ev.imageKey || ev.id;
-      const eventImgSrc = (cfg.images[imgKey] && cfg.images[imgKey][currentLang]) || `assets/images/${isTe ? 'telugu' : 'english'}/${imgKey}.jpg`;
+      const eventImgSrc = getEventImgSrc(ev);
 
       // Calendar button link builder
       const calTitle = encodeURIComponent(`${cfg.couple.groom} & ${cfg.couple.bride} - ${eventName}`);
@@ -331,69 +341,83 @@
       const calLocation = encodeURIComponent(eventVenue);
       const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${calTitle}&dates=${ev.calendarStart}/${ev.calendarEnd}&details=${calDetails}&location=${calLocation}`;
 
-      // Reserve the poster's intrinsic space (natural artwork dimensions per
-      // language) so the tall lazy-loaded images never shift the layout while
-      // loading. alt stays empty: the overlaid text conveys the content.
-      const imgSize = (cfg.images.size && cfg.images.size[currentLang]) || null;
-      const imgSizeAttrs = imgSize ? ` width="${imgSize[0]}" height="${imgSize[1]}"` : '';
-
       const hasReveal = ev.revealType && ev.revealType !== 'none';
-      const revealBtnHtml = hasReveal
-        ? `<button type="button" class="btn-sm btn-reveal" data-event-id="${ev.id}">
-             ${cfg.ui.revealButton[currentLang]}
+
+      // Short label shown on the photo thumbnail (and used as its accessible
+      // name). Bilingual per event.
+      const revealLabel = (ev.revealLabel && ev.revealLabel[currentLang]) || '';
+
+      // Peeking photo thumbnail, a SIBLING of the card, absolutely positioned,
+      // so the card's border-radius/overflow can never clip the peeking part.
+      // Revealable cards get a real button (keyboard-accessible, opens the
+      // Reveal modal, carries the label overlay; the artwork is intentionally
+      // cropped via object-fit: cover — a hint, not the full poster). The
+      // non-revealable Wedding card gets the same tilted-print treatment but is
+      // purely decorative: no label, no modal, no interaction. Each thumb gets
+      // its own base rotation so the cards don't look mechanically identical.
+      const thumbRotations = ['-5deg', '4deg', '-3deg'];
+      const thumbRotation = thumbRotations[thumbIdx % thumbRotations.length];
+      const thumbHtml = hasReveal && revealLabel
+        ? `<button type="button" class="event-thumb" data-event-id="${ev.id}"
+             aria-label="${revealLabel}" style="--thumb-rotate: ${thumbRotation}">
+             <img class="event-thumb-img" src="${eventImgSrc}" alt="" loading="lazy"
+               onerror="this.remove();">
+             <span class="event-thumb-label" aria-hidden="true">${revealLabel}</span>
            </button>`
-        : '';
+        : `<span class="event-thumb event-thumb--decor" aria-hidden="true"
+             style="--thumb-rotate: ${thumbRotation}">
+             <img class="event-thumb-img" src="${eventImgSrc}" alt="" loading="lazy"
+               onerror="this.remove();">
+           </span>`;
+      thumbIdx++;
 
       entryDiv.innerHTML = `
         <div class="timeline-node"></div>
-        <div class="event-card">
-          <div class="event-poster">
-            <img class="event-poster-img" src="${eventImgSrc}" alt="" loading="lazy"${imgSizeAttrs} onerror="this.closest('.event-poster').classList.add('img-missing'); this.remove();">
-            <div class="event-overlay">
-              <div class="event-date"><span class="event-date-star" aria-hidden="true">✦</span> ${eventDate}</div>
-              <h3 class="event-title">${eventName}</h3>
-              <p class="event-subtitle">${eventSubtitle}</p>
-              <div class="event-details-list">
-                <div class="event-detail-item">
-                  <span class="detail-ico" aria-hidden="true">⏰</span>
-                  <span class="detail-label">${isTe ? 'సమయం:' : 'Time:'}</span>
-                  <span class="detail-val">${eventTime}</span>
-                </div>
-                <div class="event-detail-item">
-                  <span class="detail-ico" aria-hidden="true">📍</span>
-                  <span class="detail-label">${isTe ? 'వేదిక:' : 'Venue:'}</span>
-                  <span class="detail-val">${eventVenue}</span>
-                </div>
-                <div class="event-detail-item">
-                  <span class="detail-ico" aria-hidden="true">👔</span>
-                  <span class="detail-label">${isTe ? 'దుస్తులు:' : 'Attire:'}</span>
-                  <span class="detail-val">${eventDressCode}</span>
-                </div>
-              </div>
-              ${eventTagline ? `<div class="event-tagline">${eventTagline}</div>` : ''}
+        <div class="event-card has-thumb">
+          <div class="event-date"><span class="event-date-star" aria-hidden="true">✦</span> ${eventDate}</div>
+          <h3 class="event-title">${eventName}</h3>
+          <p class="event-subtitle">${eventSubtitle}</p>
+          <div class="event-details-list">
+            <div class="event-detail-item">
+              <span class="detail-ico" aria-hidden="true">⏰</span>
+              <span class="detail-label">${isTe ? 'సమయం:' : 'Time:'}</span>
+              <span class="detail-val">${eventTime}</span>
+            </div>
+            <div class="event-detail-item">
+              <span class="detail-ico" aria-hidden="true">📍</span>
+              <span class="detail-label">${isTe ? 'వేదిక:' : 'Venue:'}</span>
+              <span class="detail-val">${eventVenue}</span>
+            </div>
+            <div class="event-detail-item">
+              <span class="detail-ico" aria-hidden="true">👔</span>
+              <span class="detail-label">${isTe ? 'దుస్తులు:' : 'Attire:'}</span>
+              <span class="detail-val">${eventDressCode}</span>
             </div>
           </div>
+          ${eventTagline ? `<div class="event-tagline">${eventTagline}</div>` : ''}
           <div class="event-actions">
             <a href="${calUrl}" target="_blank" rel="noopener noreferrer" class="btn-sm btn-calendar">
               ${cfg.ui.addToCalendar[currentLang]}
             </a>
-            ${revealBtnHtml}
           </div>
         </div>
+        ${thumbHtml}
       `;
 
       el.timelineEntries.appendChild(entryDiv);
     });
 
-    // Attach click listeners to Reveal buttons
-    el.timelineEntries.querySelectorAll('.btn-reveal').forEach((btn) => {
+    // Attach click listeners to the photo thumbnails — they are the single tap
+    // target that opens the Reveal modal for a ceremony. The decorative Wedding
+    // thumb carries no data-event-id, so it is naturally excluded.
+    el.timelineEntries.querySelectorAll('.event-thumb[data-event-id]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const evId = btn.getAttribute('data-event-id');
         openRevealModal(evId);
       });
     });
 
-    // Scroll-reveal fade for the poster cards (re-attached after every render
+    // Scroll-reveal fade for the ceremony cards (re-attached after every render
     // so a language change rebuilds the cards with the animation intact)
     const cards = el.timelineEntries.querySelectorAll('.event-card');
     if (!('IntersectionObserver' in window)) {
@@ -413,7 +437,44 @@
         });
       }, { threshold: 0.05, rootMargin: '0px 0px -6% 0px' });
     }
-    cards.forEach((card) => cardRevealObserver.observe(card));
+    // Stagger the cascade: each card waits ~100ms longer than the previous
+    // one, so they flow in one after another instead of popping together.
+    // The delay lives on the .timeline-entry (the shared parent) so the
+    // peeking photo thumbnail — a sibling of the card — reveals in lockstep
+    // with its card instead of popping in early.
+    cards.forEach((card, idx) => {
+      card.parentElement.style.setProperty('--reveal-delay', `${idx * 100}ms`);
+      cardRevealObserver.observe(card);
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // SCROLL-TRIGGERED SECTION REVEALS
+  // --------------------------------------------------------------------------
+
+  // Fades + rises each major .card-section.reveal-section into view the first
+  // time it enters the viewport (same double-rAF paint trick as the cards, and
+  // no-op fallback when IntersectionObserver is unavailable so content stays
+  // visible).
+  function initSectionReveals() {
+    const sections = document.querySelectorAll('.card-section.reveal-section');
+    if (!('IntersectionObserver' in window)) {
+      sections.forEach((sec) => sec.classList.add('is-visible'));
+      return;
+    }
+    if (!sectionRevealObserver) {
+      sectionRevealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const sec = entry.target;
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => sec.classList.add('is-visible'));
+          });
+          sectionRevealObserver.unobserve(sec);
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
+    }
+    sections.forEach((sec) => sectionRevealObserver.observe(sec));
   }
 
   // --------------------------------------------------------------------------
@@ -451,13 +512,14 @@
     }, 5000);
 
     function openDoors(lang) {
-      // Ignore door taps while a replay is running (panels are mid-swing)
-      if (replayingDoors) return;
       currentLang = lang;
       el.doorsWrap.classList.add('door-opened');
       setTimeout(() => {
         el.doorsWrap.classList.add('doors-hidden');
         el.body.classList.remove('doors-locked');
+        // Safety net: as the main content becomes visible/scrollable, ensure
+        // the hero section is at the very top — never mid-page.
+        window.scrollTo(0, 0);
         renderText();
         initPetals();
       }, 1100);
@@ -471,40 +533,6 @@
 
     // Center monogram → English (fast path)
     el.doorSealBtn.addEventListener('click', () => openDoors('en'));
-  }
-
-  // --------------------------------------------------------------------------
-  // REPLAY DOOR ENTRANCE
-  // --------------------------------------------------------------------------
-  // Replays the ceremonial entrance over the current page: while hidden, the
-  // panels swing shut; the closed doors fade in; after a beat they swing open
-  // and settle away, revealing the page exactly where the visitor was.
-  function replayDoorEntrance() {
-    if (replayingDoors || el.body.classList.contains('doors-locked')) return;
-    if (!el.doorsWrap || !el.doorsWrap.classList.contains('doors-hidden')) return;
-
-    replayingDoors = true;
-    el.body.classList.add('doors-locked');
-
-    // Phase 1 (0–1.25s, hidden): swing the open panels shut behind the page
-    el.doorsWrap.classList.remove('door-opened');
-
-    // Phase 2 (1.25–2.6s): fade the closed doors in over the page
-    setTimeout(() => {
-      el.doorsWrap.classList.remove('doors-hidden');
-    }, 1250);
-
-    // Phase 3 (2.6–3.7s): swing the doors open once more
-    setTimeout(() => {
-      el.doorsWrap.classList.add('door-opened');
-    }, 2600);
-
-    // Phase 4 (4s): let the doors settle away and unlock the page
-    setTimeout(() => {
-      el.doorsWrap.classList.add('doors-hidden');
-      el.body.classList.remove('doors-locked');
-      replayingDoors = false;
-    }, 4100);
   }
 
   // --------------------------------------------------------------------------
@@ -680,12 +708,13 @@
 
       const now = activeAudioCtx.currentTime;
 
-      // 1. Deep Bass Dhol Thump (dagga / bass membrane)
+      // 1. Deep Bass Dhol Thump (dagga / bass membrane) — slight random pitch
+      // jitter (±5Hz) per tap so repeated beats never sound robotically identical.
       const bassOsc = activeAudioCtx.createOscillator();
       const bassGain = activeAudioCtx.createGain();
 
       bassOsc.type = 'sine';
-      bassOsc.frequency.setValueAtTime(145, now);
+      bassOsc.frequency.setValueAtTime(145 + (Math.random() * 10 - 5), now);
       bassOsc.frequency.exponentialRampToValueAtTime(45, now + 0.22);
 
       bassGain.gain.setValueAtTime(0.9, now);
@@ -697,12 +726,12 @@
       bassOsc.start(now);
       bassOsc.stop(now + 0.28);
 
-      // 2. High Treble Slap / Ring (thappi membrane)
+      // 2. High Treble Slap / Ring (thappi membrane) — wider jitter (±12Hz)
       const trebleOsc = activeAudioCtx.createOscillator();
       const trebleGain = activeAudioCtx.createGain();
 
       trebleOsc.type = 'triangle';
-      trebleOsc.frequency.setValueAtTime(420, now);
+      trebleOsc.frequency.setValueAtTime(420 + (Math.random() * 24 - 12), now);
       trebleOsc.frequency.exponentialRampToValueAtTime(190, now + 0.12);
 
       trebleGain.gain.setValueAtTime(0.4, now);
@@ -717,6 +746,45 @@
     } catch (err) {
       console.warn('Web Audio playback error:', err);
     }
+  }
+
+  // --------------------------------------------------------------------------
+  // SPARKLE BURST (shared completion flourish)
+  // --------------------------------------------------------------------------
+
+  // Small celebratory burst of star particles animating outward & fading from
+  // the given anchor's center. Pure DOM/CSS, no assets. Skipped entirely for
+  // reduced-motion visitors; content still reveals, just without the confetti.
+  function sparkleBurst(anchorEl) {
+    if (!anchorEl) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const burst = document.createElement('div');
+    burst.className = 'sparkle-burst';
+    burst.setAttribute('aria-hidden', 'true');
+
+    const colors = ['#FBBF24', '#FDE68A', '#F59E0B', '#F43F5E'];
+    const glyphs = ['✦', '✦', '❂', '✦'];
+    const count = 14;
+
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('span');
+      p.className = 'sparkle-particle';
+      p.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 40 + Math.random() * 60;
+      p.style.setProperty('--dx', `${(Math.cos(angle) * dist).toFixed(1)}px`);
+      p.style.setProperty('--dy', `${(Math.sin(angle) * dist).toFixed(1)}px`);
+      p.style.setProperty('--rot', `${(Math.random() * 180 - 90).toFixed(0)}deg`);
+      p.style.setProperty('--dur', `${(0.6 + Math.random() * 0.4).toFixed(2)}s`);
+      p.style.setProperty('--size', `${(9 + Math.random() * 7).toFixed(1)}px`);
+      p.style.setProperty('--sparkle-color', colors[Math.floor(Math.random() * colors.length)]);
+      burst.appendChild(p);
+    }
+
+    anchorEl.appendChild(burst);
+    setTimeout(() => burst.remove(), 1200);
   }
 
   // --------------------------------------------------------------------------
@@ -822,17 +890,26 @@
     // A11y: remember the trigger, lock the background page, focus the dialog
     lastFocusedElement = document.activeElement;
     setBackgroundInert(true);
+    el.revealModal.classList.remove('closing');
     el.revealModal.classList.add('active');
     requestAnimationFrame(() => el.modalCloseBtn.focus());
   }
 
+  // Plays the exit transition (.modal-closing: scale down + fade to 0), then
+  // drops the active state and restores the background page / trigger focus
+  // only once the animation has finished — no instant unmount.
   function closeRevealModal() {
-    if (!el.revealModal.classList.contains('active')) return;
-    el.revealModal.classList.remove('active');
-    setBackgroundInert(false);
-    if (lastFocusedElement && typeof lastFocusedElement.focus === 'function' && document.contains(lastFocusedElement)) {
-      lastFocusedElement.focus();
-    }
+    const modal = el.revealModal;
+    if (!modal.classList.contains('active')) return;
+    if (modal.classList.contains('closing')) return;
+    modal.classList.add('closing');
+    setTimeout(() => {
+      modal.classList.remove('active', 'closing');
+      setBackgroundInert(false);
+      if (lastFocusedElement && typeof lastFocusedElement.focus === 'function' && document.contains(lastFocusedElement)) {
+        lastFocusedElement.focus();
+      }
+    }, 280);
   }
 
   // Keeps the background page out of the tab order & AT while the modal is open
@@ -872,9 +949,16 @@
     const wrap = document.createElement('div');
     wrap.className = 'interactive-canvas-container';
 
+    // Hidden-until-scratched layer: the event's full illustration, covered by
+    // the opaque canvas until the visitor scratches it away.
     const under = document.createElement('div');
     under.className = 'revealed-content-under';
-    under.innerHTML = `<div>${ev.revealSecret[currentLang]}</div>`;
+    const art = document.createElement('img');
+    art.className = 'revealed-illustration';
+    art.src = getEventImgSrc(ev);
+    art.alt = '';
+    art.addEventListener('error', () => art.remove());
+    under.appendChild(art);
     wrap.appendChild(under);
 
     const canvas = document.createElement('canvas');
@@ -883,7 +967,14 @@
     canvas.height = 200;
     wrap.appendChild(canvas);
 
+    // The blessing text sits in its own message box below the game, shown on
+    // completion (the revealed layer itself is now the illustration).
+    const secretBox = document.createElement('div');
+    secretBox.className = 'reveal-message-box';
+    secretBox.textContent = ev.revealSecret[currentLang];
+
     el.modalContentArea.appendChild(wrap);
+    el.modalContentArea.appendChild(secretBox);
 
     const ctx = canvas.getContext('2d');
     // Cover art only (the bilingual "scratch here" cue is a DOM chip below so
@@ -948,11 +1039,15 @@
         hud.hide();
         wrap.classList.add('game-complete');
         announceSecret(ev.revealSecret[currentLang]);
-        canvas.style.transition = 'opacity 0.6s ease';
+        // Cross-fade: illustration fades in while the cover canvas fades out,
+        // the blessing message pops below, then a sparkle burst celebrates.
+        under.classList.add('revealed');
+        secretBox.classList.add('show');
+        sparkleBurst(wrap);
+        canvas.style.transition = 'opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
         canvas.style.opacity = '0';
         setTimeout(() => {
           canvas.remove();
-          under.classList.add('revealed');
         }, 650);
       }
     }
@@ -968,7 +1063,12 @@
 
     const under = document.createElement('div');
     under.className = 'revealed-content-under';
-    under.innerHTML = `<div>${ev.revealSecret[currentLang]}</div>`;
+    const art = document.createElement('img');
+    art.className = 'revealed-illustration';
+    art.src = getEventImgSrc(ev);
+    art.alt = '';
+    art.addEventListener('error', () => art.remove());
+    under.appendChild(art);
     wrap.appendChild(under);
 
     const canvas = document.createElement('canvas');
@@ -977,7 +1077,12 @@
     canvas.height = 200;
     wrap.appendChild(canvas);
 
+    const secretBox = document.createElement('div');
+    secretBox.className = 'reveal-message-box';
+    secretBox.textContent = ev.revealSecret[currentLang];
+
     el.modalContentArea.appendChild(wrap);
+    el.modalContentArea.appendChild(secretBox);
 
     const ctx = canvas.getContext('2d');
     let completed = false;
@@ -1063,11 +1168,15 @@
         hud.hide();
         wrap.classList.add('game-complete');
         announceSecret(ev.revealSecret[currentLang]);
-        canvas.style.transition = 'opacity 0.9s ease';
+        // Reward pulse on the heart outline, then cross-fade + sparkle burst
+        canvas.classList.add('heart-glow');
+        under.classList.add('revealed');
+        secretBox.classList.add('show');
+        sparkleBurst(wrap);
+        canvas.style.transition = 'opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1)';
         canvas.style.opacity = '0';
         setTimeout(() => {
           canvas.remove();
-          under.classList.add('revealed');
         }, 950);
       }
     }
@@ -1090,7 +1199,6 @@
     drum.className = 'dhol-drum-graphic';
     drum.setAttribute('aria-label', ev.revealPrompt ? ev.revealPrompt[currentLang] : 'Play the dhol');
     drum.innerHTML = `
-      <span class="dhol-ripple" aria-hidden="true"></span>
       <svg class="dhol-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <ellipse cx="12" cy="8" rx="8" ry="4"/>
         <path d="M4 8v8c0 2.21 3.58 4 8 4s8-1.79 8-4V8"/>
@@ -1112,17 +1220,42 @@
     secretBox.className = 'reveal-message-box';
     secretBox.textContent = ev.revealSecret[currentLang];
 
-    function handleDrumTap() {
+    // The full illustration, hidden until the dhol has been tapped the target
+    // number of times, then revealed together with the blessing.
+    const illustration = document.createElement('div');
+    illustration.className = 'dhol-illustration';
+    const art = document.createElement('img');
+    art.src = getEventImgSrc(ev);
+    art.alt = '';
+    art.addEventListener('error', () => art.remove());
+    illustration.appendChild(art);
+
+    function handleDrumTap(e) {
       if (completed) return;
       playDholBeat();
 
-      // Bounce & Ripple
+      // Springy press-down bounce
       drum.classList.add('drum-bounce');
-      const ripple = drum.querySelector('.dhol-ripple');
-      ripple.classList.remove('ripple-active');
-      void ripple.offsetWidth;
-      ripple.classList.add('ripple-active');
       setTimeout(() => drum.classList.remove('drum-bounce'), 120);
+
+      // Shockwave ring expanding outward from the exact tap point (keyboard
+      // taps fall back to the drum center)
+      const rect = drum.getBoundingClientRect();
+      let rx = 50;
+      let ry = 50;
+      const cx = (e && e.clientX != null) ? e.clientX : (e && e.touches && e.touches[0] ? e.touches[0].clientX : null);
+      const cy = (e && e.clientY != null) ? e.clientY : (e && e.touches && e.touches[0] ? e.touches[0].clientY : null);
+      if (cx != null && cy != null && rect.width > 0) {
+        rx = ((cx - rect.left) / rect.width) * 100;
+        ry = ((cy - rect.top) / rect.height) * 100;
+      }
+      const tapRipple = document.createElement('span');
+      tapRipple.className = 'dhol-tap-ripple';
+      tapRipple.setAttribute('aria-hidden', 'true');
+      tapRipple.style.setProperty('--rx', `${Math.max(0, Math.min(100, rx)).toFixed(1)}%`);
+      tapRipple.style.setProperty('--ry', `${Math.max(0, Math.min(100, ry)).toFixed(1)}%`);
+      drum.appendChild(tapRipple);
+      setTimeout(() => tapRipple.remove(), 500);
 
       if (currentTaps < targetTaps) {
         document.getElementById(`dhol-dot-${currentTaps}`).classList.add('filled');
@@ -1133,8 +1266,10 @@
         completed = true;
         drum.setAttribute('aria-disabled', 'true');
         wrap.classList.add('dhol-complete');
+        illustration.classList.add('show');
         secretBox.classList.add('show');
         announceSecret(ev.revealSecret[currentLang]);
+        sparkleBurst(drum);
         // Victory flourish: a double beat as the blessing lands
         setTimeout(() => playDholBeat(), 140);
         setTimeout(() => playDholBeat(), 300);
@@ -1151,6 +1286,7 @@
 
     wrap.appendChild(drum);
     wrap.appendChild(dotsWrap);
+    wrap.appendChild(illustration);
     wrap.appendChild(secretBox);
     el.modalContentArea.appendChild(wrap);
   }
@@ -1168,9 +1304,6 @@
   // EVENT LISTENERS & BOOTSTRAP
   // --------------------------------------------------------------------------
   function initListeners() {
-    // Replay the ceremonial entrance
-    el.replayBtn.addEventListener('click', replayDoorEntrance);
-
     // Modal Close (button + backdrop click)
     el.modalCloseBtn.addEventListener('click', closeRevealModal);
     el.revealModal.addEventListener('click', (e) => {
@@ -1190,6 +1323,10 @@
   }
 
   function init() {
+    // Guarantee the page starts at the very top the instant it loads, before
+    // the door intro is even shown, regardless of prior scroll position.
+    window.scrollTo(0, 0);
+
     initDoorIntro();
     renderText();
     initPetals();
@@ -1198,6 +1335,7 @@
     initRsvp();
     initHashtagCopy();
     initListeners();
+    initSectionReveals();
   }
 
   // Run on DOM load
