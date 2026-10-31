@@ -70,8 +70,10 @@
     cardTeamBride: document.getElementById('cardTeamBride'),
     cardTeamGroom: document.getElementById('cardTeamGroom'),
     teamBrideTitle: document.getElementById('teamBrideTitle'),
+    teamBrideCaption: document.getElementById('teamBrideCaption'),
     teamBrideTagline: document.getElementById('teamBrideTagline'),
     teamGroomTitle: document.getElementById('teamGroomTitle'),
+    teamGroomCaption: document.getElementById('teamGroomCaption'),
     teamGroomTagline: document.getElementById('teamGroomTagline'),
 
     // Countdown
@@ -99,12 +101,17 @@
     directionsBtn: document.getElementById('directionsBtn'),
     callFamilyLabel: document.getElementById('callFamilyLabel'),
     familyPhoneLink: document.getElementById('familyPhoneLink'),
+    familyPhoneText: document.getElementById('familyPhoneText'),
+    rsvpExtraPhones: document.getElementById('rsvpExtraPhones'),
 
     // Closing
     closingSymbol: document.getElementById('closingSymbol'),
     closingBlessing: document.getElementById('closingBlessing'),
     closingCoupleNames: document.getElementById('closingCoupleNames'),
     closingNote: document.getElementById('closingNote'),
+    contactHeading: document.getElementById('contactHeading'),
+    contactPhones: document.getElementById('contactPhones'),
+    contactAddress: document.getElementById('contactAddress'),
 
     // Main scrollable content (background page behind the reveal modal)
     mainContent: document.querySelector('.main-content'),
@@ -197,6 +204,33 @@
   }
 
   // --------------------------------------------------------------------------
+  // CONTACT DETAILS
+  // --------------------------------------------------------------------------
+  function phoneMarkup(phone) {
+    return `<a class="contact-phone" href="tel:${phone.tel}">
+      <span class="contact-phone-icon" aria-hidden="true">📞</span>
+      <span>${phone.display}</span>
+    </a>`;
+  }
+
+  function renderContactDetails() {
+    const cfg = window.CONFIG;
+    const primary = cfg.contact.phones[0];
+
+    if (primary) {
+      el.familyPhoneLink.href = `tel:${primary.tel}`;
+      el.familyPhoneText.textContent = primary.display;
+    }
+    el.rsvpExtraPhones.innerHTML = cfg.contact.phones.slice(1).map(phoneMarkup).join('');
+
+    el.contactHeading.textContent = cfg.contact.heading[currentLang];
+    el.contactPhones.innerHTML = cfg.contact.phones
+      .map((phone) => `<li>${phoneMarkup(phone)}</li>`)
+      .join('');
+    el.contactAddress.textContent = cfg.contact.address[currentLang];
+  }
+
+  // --------------------------------------------------------------------------
   // CENTRALIZED TEXT & UI RENDERING
   // --------------------------------------------------------------------------
   function renderText() {
@@ -267,8 +301,10 @@
     el.sidePickerTitle.textContent = cfg.ui.sidePickerTitle[currentLang];
     el.sidePickerSubtitle.textContent = cfg.ui.sidePickerSubtitle[currentLang];
     el.teamBrideTitle.textContent = cfg.ui.teamBride[currentLang];
+    el.teamBrideCaption.textContent = cfg.pickSide.brideCaption[currentLang];
     el.teamBrideTagline.textContent = cfg.ui.teamBrideTagline[currentLang];
     el.teamGroomTitle.textContent = cfg.ui.teamGroom[currentLang];
+    el.teamGroomCaption.textContent = cfg.pickSide.groomCaption[currentLang];
     el.teamGroomTagline.textContent = cfg.ui.teamGroomTagline[currentLang];
 
     // Live Countdown
@@ -286,8 +322,7 @@
     el.addFullWeddingBtn.innerHTML = `<span class="btn-rsvp-icon" aria-hidden="true">📅</span> <span>${cfg.ui.addFullWeddingBtn[currentLang]}</span>`;
     el.directionsBtn.innerHTML = `<span class="btn-rsvp-icon" aria-hidden="true">📍</span> <span>${cfg.ui.directionsBtn[currentLang]}</span>`;
     el.callFamilyLabel.textContent = cfg.ui.callFamilyLabel[currentLang];
-    el.familyPhoneLink.textContent = cfg.couple.familyPhoneFormatted;
-    el.familyPhoneLink.href = `tel:${cfg.couple.familyPhone}`;
+    renderContactDetails();
 
     // Closing Screen
     el.closingSymbol.textContent = cfg.ui.closingSymbol[currentLang];
@@ -331,7 +366,6 @@
       const eventDate = isTe && ev.dateTelugu ? ev.dateTelugu : ev.date;
       const eventTime = isTe && ev.timeTelugu ? ev.timeTelugu : ev.time;
       const eventVenue = isTe && ev.venueTelugu ? ev.venueTelugu : ev.venue;
-      const eventDressCode = ev.dressCode[currentLang];
       const eventTagline = ev.tagline ? ev.tagline[currentLang] : '';
 
       // Image path
@@ -339,7 +373,7 @@
 
       // Calendar button link builder
       const calTitle = encodeURIComponent(`${cfg.couple.groom} & ${cfg.couple.bride} - ${eventName}`);
-      const calDetails = encodeURIComponent(`${eventSubtitle}\nDress Code: ${eventDressCode}\n${eventTagline}`);
+      const calDetails = encodeURIComponent([eventSubtitle, eventTagline].filter(Boolean).join('\n'));
       const calLocation = encodeURIComponent(eventVenue);
       const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${calTitle}&dates=${ev.calendarStart}/${ev.calendarEnd}&details=${calDetails}&location=${calLocation}`;
 
@@ -390,16 +424,14 @@
               <span class="detail-label">${isTe ? 'వేదిక:' : 'Venue:'}</span>
               <span class="detail-val">${eventVenue}</span>
             </div>
-            <div class="event-detail-item">
-              <span class="detail-ico" aria-hidden="true">👔</span>
-              <span class="detail-label">${isTe ? 'దుస్తులు:' : 'Attire:'}</span>
-              <span class="detail-val">${eventDressCode}</span>
-            </div>
           </div>
           ${eventTagline ? `<div class="event-tagline">${eventTagline}</div>` : ''}
           <div class="event-actions">
             <a href="${calUrl}" target="_blank" rel="noopener noreferrer" class="btn-sm btn-calendar">
               ${cfg.ui.addToCalendar[currentLang]}
+            </a>
+            <a href="${ev.mapsLink}" target="_blank" rel="noopener noreferrer" class="btn-sm btn-calendar btn-location">
+              ${cfg.ui.locationBtn[currentLang]}
             </a>
           </div>
         </div>
@@ -656,7 +688,7 @@
       e.preventDefault();
       const cfg = window.CONFIG;
       const msg = cfg.ui.rsvpWhatsAppMessage[currentLang] || cfg.ui.rsvpWhatsAppMessage.en;
-      const waUrl = `https://wa.me/${cfg.couple.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+      const waUrl = `https://wa.me/${cfg.contact.whatsappNumber}?text=${encodeURIComponent(msg)}`;
       window.open(waUrl, '_blank');
     });
 
@@ -675,7 +707,9 @@
     // 3. Directions (Google Maps)
     el.directionsBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      window.open(window.CONFIG.couple.mapsUrl, '_blank');
+      const cfg = window.CONFIG;
+      const sumuhurtham = cfg.events.find((ev) => ev.id === 'sumuhurtham');
+      window.open(sumuhurtham ? sumuhurtham.mapsLink : cfg.couple.venueMapsLink, '_blank');
     });
   }
 

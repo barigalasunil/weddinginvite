@@ -25,12 +25,12 @@ An animated, single-page bilingual Indian wedding invitation website built as a 
    - Lightweight CSS keyframe particle animation using dynamic colors tuned to the active palette.
 
 5. **Festivities Timeline**:
-   - Ceremony details with dates, times, venues, dress codes, and quotes.
+   - Ceremony details with dates, times, venues, maps links, and quotes.
    - Google Calendar one-click add links for every event.
    - Non-interactive decorative thumbnails keep the focus on the ceremony details.
 
 6. **Interactive Features**:
-   - **Pick Your Side**: "Team Bride" vs "Team Groom" selection cards that seamlessly append the choice to the RSVP.
+   - **Pick Your Side**: Ram Mohan vs Vaibhavi selection cards that seamlessly append the choice to the RSVP.
    - **Live 3D Flip Countdown**: Exact minute calculation (ISO 8601 with timezone offset) with perspective tile flip animations and milestone status messages.
    - **RSVP Form with Direct WhatsApp Integration**: Name input, attending toggle, multi-event chip selector, guest count stepper. Generates a pre-filled WhatsApp message opening `https://wa.me/<number>?text=...`.
    - **Wedding Hashtag**: One-click copy with toast notification (`#RamMohanWedsVaibhavi`).
@@ -43,7 +43,7 @@ The site is built with a strictly centralized architecture:
 
 | File | Purpose |
 |------|---------|
-| `config.js` | **Single Source of Truth**. Every name, date, venue, dress code, quote, color, phone number, and image path is configured here. |
+| `config.js` | **Single Source of Truth**. Every name, date, venue, maps link, quote, color, phone number, and image path is configured here. |
 | `index.html` | Semantic structural skeleton. All text is injected dynamically at runtime from `config.js`. |
 | `style.css` | Styling, layout, animations, and CSS variables driven by `config.js`. |
 | `script.js` | All interactions, language switching, and flip countdown. |
@@ -71,7 +71,7 @@ Placeholder images have been generated locally at the exact paths below. To cust
 Open `config.js` in any text editor. Non-technical users can change:
 - **Couple Details**: Names, parents' names, monogram, hashtag, WhatsApp number.
 - **Countdown Target**: Set `countdown.targetIso` to your wedding's ISO 8601 datetime with timezone (e.g., `"2026-12-11T10:24:00+05:30"`).
-- **Events**: Modify dates, times, venues, dress codes, taglines, and `revealType` (keep `"none"` for non-interactive cards).
+- **Events**: Modify dates, times, venues, `mapsLink`, taglines, and `revealType` (keep `"none"` for non-interactive cards).
 - **Colors**: Customize hex codes for English and Telugu modes.
 
 ---

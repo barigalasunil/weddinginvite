@@ -31,10 +31,37 @@ window.CONFIG = {
     },
     monogram: "R & V",
     hashtag: "#RamMohanWedsVaibhavi",
-    familyPhone: "+919704827962",
-    familyPhoneFormatted: "+91 97048 27962",
+    venueMapsLink: "https://www.google.com/maps/search/?api=1&query=A.G.S.%20Convention%2C%20Kesaram%20Gate%2C%20Hyderabad%20Road%2C%20Chevella%2C%20Rangareddy%20District"
+  },
+
+  // Family Contact
+  contact: {
     whatsappNumber: "919704827962",
-    mapsUrl: "https://www.google.com/maps/search/?api=1&query=A.G.S.%20Convention%2C%20Kesaram%20Gate%2C%20Hyderabad%20Road%2C%20Chevella%2C%20Rangareddy%20District"
+    heading: {
+      en: "Contact the family",
+      te: "కుటుంబ సభ్యులను సంప్రదించండి"
+    },
+    phones: [
+      { display: "97048 27962", tel: "+919704827962" },
+      { display: "91482 82990", tel: "+919148282990" },
+      { display: "75690 05718", tel: "+917569005718" }
+    ],
+    address: {
+      en: "Smt. B. Prabhavathi & Sri B. Rama Bhupal, H.No. 77-190-2, Venkatachalapathi Nagar, Kallur Estate, Kurnool",
+      te: "శ్రీమతి బి. ప్రభావతి & శ్రీ బి. రామభూపాల్, హెచ్.నెం. 77-190-2, వెంకటాచలపతి నగర్, కల్లూరు ఎస్టేట్, కర్నూలు"
+    }
+  },
+
+  // Pick Your Side captions
+  pickSide: {
+    groomCaption: {
+      en: "Ladke Wale",
+      te: "పెళ్లికొడుకు తరపు"
+    },
+    brideCaption: {
+      en: "Ladki Wale",
+      te: "పెళ్లికూతురు తరపు"
+    }
   },
 
   // Color Palettes
@@ -180,6 +207,10 @@ addToCalendar: {
       en: "+ Add to Calendar",
       te: "+ క్యాలెండర్\u200cకు చేర్చండి"
     },
+    locationBtn: {
+      en: "📍 Location",
+      te: "📍 లొకేషన్"
+    },
     sidePickerTitle: {
       en: "Whose Side Are You On?",
       te: "మీరు ఎవరి పక్షం?"
@@ -189,16 +220,16 @@ addToCalendar: {
       te: "మీ బృందాన్ని ఎంచుకుని సంబరాల్లో పాల్గొనండి!"
     },
     teamBride: {
-      en: "Team Bride",
-      te: "వధువు పక్షం"
+      en: "Vaibhavi",
+      te: "వైభవి"
     },
     teamBrideTagline: {
       en: "Ladkiwale • Ready for music, elegance & sparkle!",
       te: "పెళ్లికూతురు తరఫు • అందం, ఆనందం & ఉత్సాహం!"
     },
     teamGroom: {
-      en: "Team Groom",
-      te: "వరుడి పక్షం"
+      en: "Ram Mohan",
+      te: "రామ్ మోహన్"
     },
     teamGroomTagline: {
       en: "Ladkewale • Ready to dance, baraat & celebrate!",
@@ -279,10 +310,7 @@ addToCalendar: {
       timeTelugu: "ఉదయం 9:48",
       venue: "A.G.S. Convention, Kesaram Gate, Hyderabad Road, Chevella, Rangareddy Dist.",
       venueTelugu: "ఎ.జి.యస్. కన్వెన్షన్, కేసారం గేట్, హైదరాబాద్ రోడ్, చేవెళ్ల, రంగారెడ్డి జిల్లా",
-      dressCode: {
-        en: "Traditional Kanjeevaram Silk & Dhoti Kurta",
-        te: "సంప్రదాయ కాంచీపురం పట్టుచీర & ధోవతి కుర్తా"
-      },
+      mapsLink: "https://www.google.com/maps/search/?api=1&query=A.G.S.%20Convention%2C%20Kesaram%20Gate%2C%20Hyderabad%20Road%2C%20Chevella%2C%20Rangareddy%20District",
       tagline: {
         en: "“Tied by sacred mantras, united across seven births.”",
         te: "“వేద మంత్రాల సాక్షిగా, అగ్నిహోత్రం సమక్షంలో ఏడడుగుల బంధం.”"
@@ -308,10 +336,7 @@ addToCalendar: {
       timeTelugu: "మధ్యాహ్నం 1:00",
       venue: "Somisetty Tanish Convention, Kappal Nagar, Venkataramana Colony, Kurnool",
       venueTelugu: "సోమిశెట్టి తనీష్ కన్వెన్షన్, కప్పల్ నగర్, వెంకటరమణ కాలనీ, కర్నూలు",
-      dressCode: {
-        en: "Traditional / Formal Attire",
-        te: "సాంప్రదాయ / ఫార్మల్ దుస్తులు"
-      },
+      mapsLink: "https://share.google/UBZSRAhkrMy6VpuPV",
       tagline: {
         en: "“A celebration of love, laughter and togetherness.”",
         te: "“ప్రేమ, నవ్వు మరియు కలిసి ఉండే ఆనందం.”"
