@@ -246,9 +246,11 @@
 
     // Formal Invite
     el.formalEyebrow.textContent = cfg.ui.formalEyebrow[currentLang];
-    el.groomFullName.textContent = isTe ? (cfg.couple.groomTelugu || cfg.couple.groom) : cfg.couple.groom;
+    el.groomFullName.textContent = (cfg.couple.groomFullName && cfg.couple.groomFullName[currentLang]) ||
+      (isTe ? (cfg.couple.groomTelugu || cfg.couple.groom) : cfg.couple.groom);
     el.groomParentsText.textContent = cfg.couple.groomParents[currentLang];
-    el.brideFullName.textContent = isTe ? (cfg.couple.brideTelugu || cfg.couple.bride) : cfg.couple.bride;
+    el.brideFullName.textContent = (cfg.couple.brideFullName && cfg.couple.brideFullName[currentLang]) ||
+      (isTe ? (cfg.couple.brideTelugu || cfg.couple.bride) : cfg.couple.bride);
     el.brideParentsText.textContent = cfg.couple.brideParents[currentLang];
     el.dateTileLabel.textContent = cfg.ui.dateLabel[currentLang];
     el.dateTileVal.textContent = cfg.ui.dateValue[currentLang];
@@ -662,7 +664,7 @@
     el.addFullWeddingBtn.addEventListener('click', (e) => {
       e.preventDefault();
       const cfg = window.CONFIG;
-      const weddingEv = cfg.events.find(ev => ev.id === 'wedding') || cfg.events[0];
+      const weddingEv = cfg.events.find(ev => ev.id === 'sumuhurtham') || cfg.events[0];
       const calTitle = encodeURIComponent(`${cfg.couple.groom} & ${cfg.couple.bride} - Wedding Ceremony`);
       const calDetails = encodeURIComponent(`The Auspicious Wedding of ${cfg.couple.groom} & ${cfg.couple.bride}.\nHashtag: ${cfg.couple.hashtag}`);
       const calLocation = encodeURIComponent(weddingEv.venue);

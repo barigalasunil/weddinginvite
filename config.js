@@ -11,22 +11,30 @@ window.CONFIG = {
   couple: {
     groom: "Ram Mohan",
     groomTelugu: "రామ్ మోహన్",
+    groomFullName: {
+      en: "Dr. Ram Mohan",
+      te: "డా. రామ్ మోహన్"
+    },
     groomParents: {
-      en: "Son of Smt. Lakshmi & Sri Venkateshwar Rao",
-      te: "శ్రీమతి లక్ష్మి మరియు శ్రీ వేంకటేశ్వర రావు గార్ల సుపుత్రుడు"
+      en: "Son of Smt. Bogishetty Prabhavathi & Sri Bogishetty Rama Bhupal",
+      te: "శ్రీమతి బోగిశెట్టి ప్రభావతి & శ్రీ బోగిశెట్టి రామభూపాల్ గారల కనిష్ఠ పుత్రుడు"
     },
     bride: "Vaibhavi",
     brideTelugu: "వైభవి",
+    brideFullName: {
+      en: "Dr. Aaradhya (Vaibhavi)",
+      te: "డా. ఆరాధ్య (వైభవి)"
+    },
     brideParents: {
-      en: "Daughter of Smt. Padmavati & Sri Satyanarayana Sharma",
-      te: "శ్రీమతి పద్మావతి మరియు శ్రీ సత్యనారాయణ శర్మ గార్ల సుపుత్రిక"
+      en: "Elder daughter of Smt. P. Lavanya & Sri P. Shivakumar, Vikarabad",
+      te: "శ్రీమతి పట్లోళ్ళ లావణ్య & శ్రీ పట్లోళ్ళ శివకుమార్ గారల జ్యేష్ఠ పుత్రిక"
     },
     monogram: "R & V",
     hashtag: "#RamMohanWedsVaibhavi",
-    familyPhone: "+919876543210",
-    familyPhoneFormatted: "+91 98765 43210",
-    whatsappNumber: "919876543210",
-    mapsUrl: "https://maps.google.com/?q=Sri+Venkateshwara+Kalyana+Vedika+Hyderabad"
+    familyPhone: "+919704827962",
+    familyPhoneFormatted: "+91 97048 27962",
+    whatsappNumber: "919704827962",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=A.G.S.%20Convention%2C%20Kesaram%20Gate%2C%20Hyderabad%20Road%2C%20Chevella%2C%20Rangareddy%20District"
   },
 
   // Color Palettes
@@ -67,18 +75,6 @@ window.CONFIG = {
       en: 'assets/images/english/hero.jpg',
       te: 'assets/images/telugu/hero.jpg'
     },
-    haldi: {
-      en: 'assets/images/english/haldi.jpg',
-      te: 'assets/images/telugu/haldi.jpg'
-    },
-    mehndi: {
-      en: 'assets/images/english/mehndi.jpg',
-      te: 'assets/images/telugu/mehndi.jpg'
-    },
-    sangeet: {
-      en: 'assets/images/english/sangeet.jpg',
-      te: 'assets/images/telugu/sangeet.jpg'
-    },
     wedding: {
       en: 'assets/images/english/wedding.jpg',
       te: 'assets/images/telugu/wedding.jpg'
@@ -100,10 +96,10 @@ window.CONFIG = {
 
   // Live Countdown Muhurtham Target (ISO 8601 with timezone offset)
   countdown: {
-    targetIso: "2026-11-20T09:30:00+05:30",
+    targetIso: "2026-11-20T09:48:00+05:30",
     muhurthamLabel: {
-      en: "Auspicious Sumuhurtham: Friday, November 20, 2026 at 09:30 AM IST",
-      te: "శుభ సుముహూర్తం: శుక్రవారం, 20 నవంబర్ 2026 ఉదయం 09:30 ని.లకు"
+      en: "Friday, 20 November 2026 · 9:48 AM Muhurtham",
+      te: "20 నవంబర్ 2026 • శుక్రవారం • ఉదయం 9:48 ముహూర్తం"
     },
     heading: {
       en: "Counting Down to the Sacred Union",
@@ -161,12 +157,12 @@ window.CONFIG = {
       te: "కళ్యాణ వేదిక"
     },
     dateValue: {
-      en: "November 20, 2026 • Friday",
+      en: "Friday, 20 November 2026",
       te: "20 నవంబర్ 2026 • శుక్రవారం"
     },
     venueValue: {
-      en: "Sri Venkateshwara Kalyana Vedika, Jubilee Hills, Hyderabad",
-      te: "శ్రీ వేంకటేశ్వర కళ్యాణ వేదిక, జూబ్లీహిల్స్, హైదరాబాద్"
+      en: "A.G.S. Convention, Kesaram Gate, Hyderabad Road, Chevella, Rangareddy Dist.",
+      te: "ఎ.జి.యస్. కన్వెన్షన్, కేసారం గేట్, హైదరాబాద్ రోడ్, చేవెళ్ల, రంగారెడ్డి జిల్లా"
     },
     copiedHashtag: {
       en: "Hashtag copied to clipboard!",
@@ -177,8 +173,8 @@ window.CONFIG = {
       te: "శుభ కార్యముల వివరములు"
     },
     timelineSubtitle: {
-      en: "Join us in each joyful celebration of love, music, and traditions",
-      te: "ప్రేమ, సంగీతం మరియు సంప్రదాయాల వేడుకలలో మాతో పాల్గొనండి"
+      en: "Join us for the Sumuhurtham and Reception as we celebrate love, family, and new beginnings",
+      te: "ప్రేమ, కుటుంబం మరియు నూతన ఆరంభాల సంబరంలో సుముహూర్తం మరియు రిసెప్షన్ వేడుకలకు మాతో చేరండి"
     },
 addToCalendar: {
       en: "+ Add to Calendar",
@@ -245,8 +241,8 @@ addToCalendar: {
       te: "వారి పవిత్ర బంధం నూరేళ్ళూ సుఖసంతోషాలు, ఆయురారోగ్యాలు మరియు సంపదలతో కలకాలం వర్ధిల్లాలని నిండు మనసుతో ఆశీర్వదించండి."
     },
     closingNote: {
-      en: "With best compliments and love from the Barigala & Sharma Families.",
-      te: "బరిగల & శర్మ కుటుంబ సభ్యుల ఆత్మీయ శుభాకాంక్షలు మరియు ఆహ్వానం."
+      en: "Hosted with love by Smt. B. Prabhavathi & Sri B. Rama Bhupal · H.No. 77-190-2, Venkatachalapathi Nagar, Kallur Estate, Kurnool. Out-of-town guests: please plan to arrive at Kallur Estate, Kurnool by Wednesday, 18 November 2026.",
+      te: "శ్రీమతి బి. ప్రభావతి & శ్రీ బి. రామభూపాల్ గార్ల ఆత్మీయ ఆతిథ్యం · హెచ్.నెం. 77-190-2, వెంకటాచలపతి నగర్, కల్లూరు ఎస్టేట్, కర్నూలు. దూర ప్రాంతాల అతిథులు దయచేసి 18-11-2026 బుధవారం నాటికి కల్లూరు ఎస్టేట్, కర్నూలు చేరుకోవాలని కోరుతున్నాము."
     },
     modalCloseBtn: {
       en: "Close ✕",
@@ -264,153 +260,25 @@ addToCalendar: {
     }
   },
 
-  // Festivities Events Array (4+ events)
-  // CEREMONY NAMES EXACT MATCH REQUIRED:
-  // Haldi    → పసుపు వేడుక
-  // Mehndi   → గోరింటాకు వేడుక
-  // Sangeet  → సంగీత రాత్రి
-  // Wedding  → వివాహం
+  // Festivities Events Array (2 events)
   events: [
     {
-      id: "haldi",
-      imageKey: "haldi",
-      name: {
-        en: "Haldi Ceremony",
-        te: "పసుపు వేడుక"
-      },
-      subtitle: {
-        en: "The golden splash of turmeric, laughter, and auspicious beginnings",
-        te: "పసుపు కుంకుమల శోభ, ఆత్మీయుల నవ్వులు మరియు మంగళకరమైన ఆరంభం"
-      },
-      date: "December 9, 2026",
-      dateTelugu: "9 డిసెంబర్ 2026",
-      time: "09:00 AM IST onwards",
-      timeTelugu: "ఉదయం 09:00 ని.ల నుండి",
-      venue: "Royal Mango Grove Lawn, Jubilee Hills, Hyderabad",
-      venueTelugu: "రాయల్ మ్యాంగో గ్రోవ్, జూబ్లీహిల్స్, హైదరాబాద్",
-      dressCode: {
-        en: "Sunny Yellows, Mustard & Florals",
-        te: "పసుపు రంగు, పీతాంబరం & పూల అలంకరణ దుస్తులు"
-      },
-      tagline: {
-        en: "“Drenched in golden turmeric, wrapped in timeless love.”",
-        te: "“పసుపు వర్ణపు మెరుపులతో మొదలయ్యే ప్రేమ ప్రయాణం.”"
-      },
-      revealType: "scratch", // scratch | trace | dhol | none
-      revealPrompt: {
-        en: "Scratch with your finger or mouse to unveil the Haldi blessing!",
-        te: "పసుపు వేడుక ఆశీర్వాదం చూడటానికి కార్డ్‌ను స్క్రాచ్ చేయండి!"
-      },
-      revealLabel: {
-        en: "Rub to Reveal",
-        te: "గీరి చూడండి"
-      },
-      revealSecret: {
-        en: "✨ Blessings revealed: Golden turmeric glows with health, joy & laughter! ✨",
-        te: "✨ పసుపు శోభతో జీవితం నిత్య కల్యాణమై వెలగాలని ఆశీస్సులు! ✨"
-      },
-      calendarStart: "20261209T033000Z",
-      calendarEnd: "20261209T063000Z"
-    },
-    {
-      id: "mehndi",
-      imageKey: "mehndi",
-      name: {
-        en: "Mehndi Celebration",
-        te: "గోరింటాకు వేడుక"
-      },
-      subtitle: {
-        en: "Intricate henna patterns singing tales of devotion and joy",
-        te: "చేతులపై గోరింటాకు పూత, పాటల సందడి మరియు అనురాగపు వర్ణాలు"
-      },
-      date: "December 9, 2026",
-      dateTelugu: "9 డిసెంబర్ 2026",
-      time: "04:30 PM IST onwards",
-      timeTelugu: "సాయంత్రం 04:30 ని.ల నుండి",
-      venue: "The Marigold Courtyard, Jubilee Hills, Hyderabad",
-      venueTelugu: "బంతిపూల ప్రాంగణం, జూబ్లీహిల్స్, హైదరాబాద్",
-      dressCode: {
-        en: "Tender Green, Olive & Festive Pastels",
-        te: "ఆకుపచ్చ, గోరింట వర్ణం & సాంప్రదాయ దుస్తులు"
-      },
-      tagline: {
-        en: "“As the henna deepens its hue, eternal love shines through.”",
-        te: "“గోరింటాకు పండిన కొద్దీ అనురాగం మరింతగా చిగురిస్తుంది.”"
-      },
-      revealType: "trace", // trace the heart
-      revealPrompt: {
-        en: "Trace along the sacred heart to complete the Mehendi pattern!",
-        te: "గోరింటాకు హృదయ ఆకారాన్ని గీసి వేడుకను ఆవిష్కరించండి!"
-      },
-      revealLabel: {
-        en: "Trace the Heart",
-        te: "హృదయాన్ని గీయండి"
-      },
-      revealSecret: {
-        en: "🌿 Beautiful henna etched forever: Two loving hearts united as one! 🌿",
-        te: "🌿 అనురాగపు గోరింటాకుతో రెండు మనసులు ఒక్కటయ్యాయి! 🌿"
-      },
-      calendarStart: "20261209T110000Z",
-      calendarEnd: "20261209T153000Z"
-    },
-    {
-      id: "sangeet",
-      imageKey: "sangeet",
-      name: {
-        en: "Sangeet Night",
-        te: "సంగీత రాత్రి"
-      },
-      subtitle: {
-        en: "An electrifying evening of beats, bhangra, and musical celebration",
-        te: "సంగీత లయలు, నృత్యాల సందడి మరియు సంతోషాల సునామీ"
-      },
-      date: "December 10, 2026",
-      dateTelugu: "10 డిసెంబర్ 2026",
-      time: "07:00 PM IST onwards",
-      timeTelugu: "సాయంత్రం 07:00 ని.ల నుండి",
-      venue: "Grand Crystal Ballroom, Taj Krishna, Banjara Hills, Hyderabad",
-      venueTelugu: "గ్రాండ్ క్రిస్టల్ వేదిక, తాజ్ కృష్ణ, బంజారాహిల్స్, హైదరాబాద్",
-      dressCode: {
-        en: "Indo-Western Glitz, Glamour & Sparkling Lehengas",
-        te: "రాయల్ గ్లిట్జ్, మెరిసే లెహంగాలు & గ్రాండ్ సూట్స్"
-      },
-      tagline: {
-        en: "“When hearts celebrate in rhythm, the night sings with joy.”",
-        te: "“అడుగులు కలిసే వేళ... పాటలు పలికే వేళ... సంగీత సంతోషం!”"
-      },
-      revealType: "dhol", // tap the dhol drum
-      revealPrompt: {
-        en: "Tap the traditional Dhol drum to unlock the festive sangeet rhythm!",
-        te: "సంగీత లయను మేల్కొలపడానికి డోలుపై తట్టండి!"
-      },
-      revealLabel: {
-        en: "Tap the Dhol",
-        te: "డోలు తట్టండి"
-      },
-      revealSecret: {
-        en: "🥁 Dhol beats rock the dance floor! Put on your dancing shoes! 🥁",
-        te: "🥁 డోలు మోగింది! డ్యాన్స్ ఫ్లోర్‌పై సందడి చేయడానికి సిద్ధం కండి! 🥁"
-      },
-      calendarStart: "20261210T133000Z",
-      calendarEnd: "20261210T183000Z"
-    },
-    {
-      id: "wedding",
+      id: "sumuhurtham",
       imageKey: "wedding",
       name: {
-        en: "Auspicious Wedding",
-        te: "వివాహం"
+        en: "Sumuhurtham",
+        te: "సుముహూర్తం"
       },
       subtitle: {
-        en: "The sacred saat phere and jeelakarra bellam ceremony",
-        te: "జీలకర్ర బెల్లం, మంగళసూత్ర ధారణ మరియు సప్తపది పవిత్ర వివాహ ఘట్టం"
+        en: "Uttarabhadra Nakshatra · Dhanur Lagnam · Pushya Rashi",
+        te: "ఉత్తరాభాద్ర నక్షత్రయుక్త ధనుర్ లగ్న శుభ పుష్య రాశి"
       },
-      date: "November 20, 2026",
-      dateTelugu: "20 నవంబర్ 2026",
-      time: "Sumuhurtham: 09:30 AM IST",
-      timeTelugu: "సుముహూర్తం: ఉదయం 09:30 ని.లకు",
-      venue: "Sri Venkateshwara Kalyana Vedika, Jubilee Hills, Hyderabad",
-      venueTelugu: "శ్రీ వేంకటేశ్వర కళ్యాణ వేదిక, జూబ్లీహిల్స్, హైదరాబాద్",
+      date: "Friday, 20 November 2026",
+      dateTelugu: "20 నవంబర్ 2026 • శుక్రవారం",
+      time: "9:48 AM",
+      timeTelugu: "ఉదయం 9:48",
+      venue: "A.G.S. Convention, Kesaram Gate, Hyderabad Road, Chevella, Rangareddy Dist.",
+      venueTelugu: "ఎ.జి.యస్. కన్వెన్షన్, కేసారం గేట్, హైదరాబాద్ రోడ్, చేవెళ్ల, రంగారెడ్డి జిల్లా",
       dressCode: {
         en: "Traditional Kanjeevaram Silk & Dhoti Kurta",
         te: "సంప్రదాయ కాంచీపురం పట్టుచీర & ధోవతి కుర్తా"
@@ -420,8 +288,37 @@ addToCalendar: {
         te: "“వేద మంత్రాల సాక్షిగా, అగ్నిహోత్రం సమక్షంలో ఏడడుగుల బంధం.”"
       },
       revealType: "none",
-      calendarStart: "20261120T040000Z",
-      calendarEnd: "20261120T090000Z"
+      calendarStart: "20261120T041800Z",
+      calendarEnd: "20261120T070000Z"
+    },
+    {
+      id: "reception",
+      imageKey: "reception",
+      name: {
+        en: "Reception",
+        te: "రిసెప్షన్"
+      },
+      subtitle: {
+        en: "An afternoon of warm wishes, lunch and celebration with family and friends",
+        te: "ఆత్మీయ ఆశీర్వాదాలు, భోజనం మరియు సంబరాలతో ఆనందదాయక మధ్యాహ్నం"
+      },
+      date: "Sunday, 22 November 2026",
+      dateTelugu: "22 నవంబర్ 2026 • ఆదివారం",
+      time: "1:00 PM",
+      timeTelugu: "మధ్యాహ్నం 1:00",
+      venue: "Somisetty Tanish Convention, Kappal Nagar, Venkataramana Colony, Kurnool",
+      venueTelugu: "సోమిశెట్టి తనీష్ కన్వెన్షన్, కప్పల్ నగర్, వెంకటరమణ కాలనీ, కర్నూలు",
+      dressCode: {
+        en: "Traditional / Formal Attire",
+        te: "సాంప్రదాయ / ఫార్మల్ దుస్తులు"
+      },
+      tagline: {
+        en: "“A celebration of love, laughter and togetherness.”",
+        te: "“ప్రేమ, నవ్వు మరియు కలిసి ఉండే ఆనందం.”"
+      },
+      revealType: "none",
+      calendarStart: "20261122T073000Z",
+      calendarEnd: "20261122T103000Z"
     }
   ]
 };

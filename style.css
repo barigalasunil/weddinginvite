@@ -1877,7 +1877,7 @@ body.lang-te .closing-couple-names {
   gap: 8px;
 }
 
-/* The full Sangeet illustration, revealed after the target taps land. Hidden
+/* The full event illustration, revealed after the target taps land. Hidden
    (display: none) until completion, then shown with the same pop as the
    blessing message box. */
 .dhol-illustration {
